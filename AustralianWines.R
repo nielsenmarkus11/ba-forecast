@@ -13,3 +13,4 @@ for (i in 1:dim(dat.ts)[2]){
   print(paste0("Seasonal Naive Forecast for ",colnames(dat.ts)[i]))
   print(snaive(dat.ts[,i],2))
 }
+
