@@ -26,6 +26,7 @@ k <- 60
 n <- length(dat.ts[,1])
 forecast.mae <- matrix(NA,n-k,2)
 train.mae <- matrix(NA,n-k,60)
+forecast.dat <- matrix(NA,n-k,2)
 st <- tsp(dat.ts[,1])[1]+(k-2)/12
  
 for(i in 1:(n-k))
@@ -36,6 +37,8 @@ for(i in 1:(n-k))
   fcast1 <- fit1$mean
   forecast.mae[i,1:length(xnext)] <- abs(fit1[['mean']]-xnext)
   train.mae[i,1:length(xshort)] <-abs(fit1[['residuals']])
+  print(i)
+  forecast.dat[i,1:length(xnext)] <- fit1[['mean']]-xnext
 }
  
 boxplot(cbind(train.mae,forecast.mae),col=c(rep("blue",60),rep("red",2)),
@@ -45,3 +48,19 @@ legend("topleft",legend=c("Training","Forecast"),col=c("blue","red"),lty=1,lwd=1
 
 ## Results of Validation
 The distribution of the errors for the forecasts are not that different from the distributions of errors in the training data. The model appears to not have been overfit.
+
+## Prediction Intervals
+```{r}
+snaive(dat.ts,2)[['mean']][1] + quantile(forecast.dat[,1],probs = c(.1,.9),na.rm=T)
+snaive(dat.ts,2)[['mean']][2] + quantile(forecast.dat[,2],probs = c(.1,.9),na.rm=T)
+```
+
+# Differencing
+```{r}
+dat.ts.diff <- diff(dat.ts)
+dat.ts.diff2 <- diff(dat.ts.diff,lag = 12)
+jpeg('wines-diff.jpg')
+plot(dat.ts.diff2)
+dev.off()
+```
+
