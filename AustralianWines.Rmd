@@ -81,4 +81,30 @@ undiff1 <- diffinv(ma.pred,lag=12,xi=mysi)
 undiff2 <- diffinv(undiff1,lag=1,xi=myxi)
 ```
 
+## Regression forecast
+```{r}
+train <- window(dat.ts[,1], end=1994-1/12)
+valid <- window(dat.ts[,1], start=1994)
+  
+plot(train)
+
+mylm <- tslm(train~season+trend,lambda=0)
+summary(mylm)
+
+valid.fc <- forecast(mylm,h=12)
+#jpeg('Wine-regression.jpg',height=800)
+#par(mfrow=c(2,1))
+plot(dat.ts[,1],lwd=2,ylab="Monthly Sales",main="Fortified Wine Forecast")
+lines(fitted(valid.fc), col='blue',lwd=2)
+lines(valid.fc$mean,col='red',lwd=2)
+legend('topright',legend=c("Actual","Forecast-Training","Forecast-Validation"),col=c("black","blue","red"),lwd=2)
+plot(ts(c(fitted(valid.fc)-train,valid.fc$mean-valid),start=c(1980,1),frequency=12),ylab="Residuals")
+abline(h=0)
+#dev.off()
+
+fortif <- dat.ts[,1]
+mynewlm <- tslm(fortif~season+trend,lambda=0)
+forecast(mynewlm,h=2)
+```
+
 
