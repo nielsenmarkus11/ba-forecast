@@ -64,3 +64,18 @@ plot(dat.ts.diff2)
 dev.off()
 ```
 
+## Moving Average forecasts
+```{r}
+library(zoo)
+fortif.diff <- dat.ts.diff[,1]
+myxi <- ts(fortif.diff[13:length(fortif.diff)],start=c(1981,1),frequency=12)
+mysi <- ts(diff(dat.ts[,1],lag=12)[12:length(diff(dat.ts[,1],lag=12))],start=c(1981,2),frequency = 12)
+
+myma <- rollmean(fortif.diff, k=12, align="right")
+ma.pred <- ts(c(fortif.diff,rep(tail(myma,1),2)),start=c(1980,1),frequency=12)
+
+undiff1 <- diffinv(ma.pred,lag=12,xi=mysi)
+undiff2 <- diffinv(undiff1,lag=1,xi=myxi)
+```
+
+
