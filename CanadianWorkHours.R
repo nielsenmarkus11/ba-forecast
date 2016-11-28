@@ -72,3 +72,10 @@ lines(valid$Year,valid$lower,col='red',lty=2)
 lines(valid$Year,valid$upper,col='red',lty=2)
 dev.off()
 
+# Now look at autocorrelation
+library(forecast)
+
+dat.ts <- ts(dat[,2],start=1966)
+plot(dat.ts)
+
+Acf(dat.ts)

@@ -105,6 +105,8 @@ abline(h=0)
 fortif <- dat.ts[,1]
 mynewlm <- tslm(fortif~season+trend,lambda=0)
 forecast(mynewlm,h=2)
+sqrt(mean((fitted(valid.fc)-train)^2))
+sqrt(mean((valid.fc$mean-valid)^2))
 ```
 
 
